@@ -1,0 +1,29 @@
+<!-- templates/login.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="flex justify-center items-center">
+    <div class="card w-full max-w-md">
+        <h2 class="text-3xl font-bold text-center mb-6 text-blue-700">Login</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                <input type="password" id="password" name="password" class="form-input" required>
+            </div>
+            <div class="mb-6 flex items-center">
+                <input type="checkbox" id="remember" name="remember" class="mr-2 rounded">
+                <label for="remember" class="text-gray-700 text-sm">Remember Me</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-full">Login</button>
+        </form>
+        <div class="text-center mt-4">
+            <small class="text-gray-600">
+                Need an account? <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline">Register Now</a>
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock content %}

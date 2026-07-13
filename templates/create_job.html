@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-6">{{ title or 'Create Job' }}</h1>
+    <form method="POST">
+        <div class="mb-4">
+            <label for="title" class="block text-gray-700 font-semibold mb-2">Title</label>
+            <input type="text" id="title" name="title" class="form-input" value="{{ job.title if job else '' }}" required>
+        </div>
+        <div class="mb-4">
+            <label for="description" class="block text-gray-700 font-semibold mb-2">Description</label>
+            <textarea id="description" name="description" class="form-input" rows="5" required>{{ job.description if job else '' }}</textarea>
+        </div>
+        {% if job %}
+        <div class="mb-4 flex items-center">
+            <input type="checkbox" id="is_completed" name="is_completed" class="mr-2" {% if job.is_completed %}checked{% endif %}>
+            <label for="is_completed" class="text-gray-700">Mark as Completed</label>
+        </div>
+        {% endif %}
+        <div class="flex justify-end">
+            <button type="submit" class="btn btn-primary">{{ 'Update Job' if job else 'Create Job' }}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

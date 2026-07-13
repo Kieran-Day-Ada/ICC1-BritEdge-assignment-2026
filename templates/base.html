@@ -1,0 +1,99 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BritEdge - {{ title | default('Job Management') }}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and general body styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            @apply bg-gray-100 text-gray-800;
+        }
+        /* Flash message styling */
+        .alert {
+            @apply p-3 mb-4 rounded-lg text-sm;
+        }
+        .alert-success {
+            @apply bg-green-100 text-green-800;
+        }
+        .alert-danger {
+            @apply bg-red-100 text-red-800;
+        }
+        .alert-info {
+            @apply bg-blue-100 text-blue-800;
+        }
+        /* Button styling */
+        .btn {
+            @apply py-2 px-4 rounded-lg font-semibold transition duration-200 ease-in-out;
+        }
+        .btn-primary {
+            @apply bg-blue-600 text-white hover:bg-blue-700;
+        }
+        .btn-secondary {
+            @apply bg-gray-300 text-gray-800 hover:bg-gray-400;
+        }
+        .btn-danger {
+            @apply bg-red-600 text-white hover:bg-red-700;
+        }
+        /* Form input styling */
+        .form-input {
+            @apply w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+        }
+        /* Card styling */
+        .card {
+            @apply bg-white p-6 rounded-lg shadow-md;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Debug info for authentication -->
+    <div class="container mx-auto mt-2 text-xs text-gray-500">
+        <p>Authenticated: {{ current_user.is_authenticated }}</p>
+        <p>User ID: {{ current_user.get_id() }}</p>
+    </div>
+    <header class="bg-blue-800 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+             <img src="{{ url_for('static', filename='britedge.jpg') }}" alt="BritEdge Logo" class="h-12 w-auto rounded shadow" style="max-height:50px;">
+            <a href="{{ url_for('home') }}" class="text-2xl font-bold rounded-lg p-2 hover:bg-blue-700 transition duration-200">BritEdge Job Scheduling System</a>
+            <nav>
+                <ul class="flex space-x-4">
+                    {% if current_user.is_authenticated %}
+                        <li><a href="{{ url_for('new_job') }}" class="btn btn-primary">New Job</a></li>
+                        <li><a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}" class="btn btn-primary">Login</a></li>
+                        <li><a href="{{ url_for('register') }}" class="btn btn-secondary">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto mt-8 p-4 flex-grow">
+        <!-- Flash messages display -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-4">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; {{ now.year }} BritEdge. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
