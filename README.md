@@ -109,12 +109,7 @@ variable).
 
 App Service expects a production WSGI server rather than Flask's built-in
 development server, so this repo includes `gunicorn` for that. When you
-create the App Service (Linux, Python runtime), set the **Startup Command**
-to:
-
-```sh
-gunicorn --bind=0.0.0.0 --timeout 600 application:app
-```
+create the App Service (Linux, Python runtime), this will all be automatically configured.
 
 Then configure your chosen database's environment variables under
 **Settings → Environment variables** (formerly Application Settings) -
