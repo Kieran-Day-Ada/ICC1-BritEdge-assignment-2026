@@ -1,9 +1,11 @@
 """SQL backend: SQLAlchemy models and data-access functions.
 
-Used for both the local SQLite database (default, zero config) and a real
-SQL database such as Azure Database for PostgreSQL, selected via the
-DATABASE_URL environment variable. See data/__init__.py for backend
-selection.
+Used for local SQLite (default, zero config) and SQL databases selected via
+environment variables:
+- Azure SQL Database via AZURE_SQL_SERVER/AZURE_SQL_USER/AZURE_SQL_PASSWORD
+- PostgreSQL via PG_HOST/PG_USER/PG_PASSWORD
+
+See data/__init__.py for backend selection.
 """
 from datetime import datetime, timezone
 

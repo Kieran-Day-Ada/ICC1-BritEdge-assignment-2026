@@ -1,7 +1,7 @@
 [project]
 name = "icc1-web-app-job-schedule"
 version = "0.1.0"
-description = "BritEdge job scheduling app - choose SQLite, PostgreSQL, or Cosmos DB NoSQL"
+description = "BritEdge job scheduling app - choose SQLite, Azure SQL, PostgreSQL, or Cosmos DB NoSQL"
 requires-python = ">=3.9"
 dependencies = [
     "azure-cosmos>=4.5,<5.0",
@@ -10,6 +10,7 @@ dependencies = [
     "flask-sqlalchemy>=3.1,<4.0",
     "gunicorn>=23.0,<27.0",
     "psycopg2-binary>=2.9,<3.0",
+    "pyodbc>=5.1,<6.0",
     "python-dotenv>=1.0,<2.0",
     "sqlalchemy>=2.0,<3.0",
     "werkzeug>=3.1,<4.0",

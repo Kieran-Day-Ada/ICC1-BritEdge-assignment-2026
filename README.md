@@ -12,10 +12,11 @@ The same codebase runs unmodified on:
 - **A virtual machine** (with `uv run` or plain Python)
 - **Azure App Service** (with gunicorn)
 
-...and works with any of three database backends, selected purely through
+...and works with any of four database backends, selected purely through
 environment variables:
 
 - **Local**: the built-in SQLite database - zero configuration
+- **SQL**: Azure SQL Database
 - **SQL**: a real SQL database, e.g. Azure Database for PostgreSQL
 - **NoSQL**: Azure Cosmos DB for NoSQL (documents)
 
@@ -25,8 +26,16 @@ environment variables:
 are set:
 
 1. If `COSMOS_ENDPOINT` is set → **NoSQL** (Azure Cosmos DB for NoSQL, via `data/nosql_backend.py`)
-2. Else if `DATABASE_URL` is set → **SQL** (SQLAlchemy, e.g. PostgreSQL, via `data/sql_backend.py`)
-3. Else → **Local** SQLite (also via `data/sql_backend.py`, just with a `sqlite:///site.db` connection string)
+2. Else if `AZURE_SQL_SERVER`, `AZURE_SQL_USER`, and `AZURE_SQL_PASSWORD` are all set → **SQL** (SQLAlchemy + `pyodbc`, Azure SQL Database, via `data/sql_backend.py`)
+3. Else if `PG_HOST`, `PG_USER`, and `PG_PASSWORD` are all set → **SQL** (SQLAlchemy, PostgreSQL, via `data/sql_backend.py`)
+4. Else → **Local** SQLite (also via `data/sql_backend.py`, just with a `sqlite:///site.db` connection string)
+
+For Azure SQL mode, `AZURE_SQL_PORT`, `AZURE_SQL_DATABASE`, and
+`AZURE_SQL_DRIVER` are optional and default to `1433`, `master`, and
+`ODBC Driver 18 for SQL Server` respectively.
+
+For PostgreSQL mode, `PG_PORT` and `PG_DATABASE` are optional and default to
+`5432` and `postgres` respectively.
 
 `routes.py` never touches SQLAlchemy or the Cosmos SDK directly - it only
 calls functions like `data.get_all_jobs()` or `data.create_job(...)`, and
@@ -74,9 +83,12 @@ Copy the template and edit it:
 cp .env.example .env
 ```
 
-- Leave `DATABASE_URL` and `COSMOS_ENDPOINT` both commented out → **SQLite** (default)
-- Set `DATABASE_URL` → **SQL** (e.g. Azure Database for PostgreSQL)
-- Set `COSMOS_ENDPOINT` (and `COSMOS_KEY`) → **NoSQL** (Azure Cosmos DB for NoSQL). This takes priority over `DATABASE_URL` if both happen to be set.
+- Leave `AZURE_SQL_SERVER`, `PG_HOST`, and `COSMOS_ENDPOINT` all commented out → **SQLite** (default)
+- Set `AZURE_SQL_SERVER`, `AZURE_SQL_USER`, and `AZURE_SQL_PASSWORD` → **SQL** (Azure SQL Database)
+- Optional for Azure SQL: set `AZURE_SQL_PORT`, `AZURE_SQL_DATABASE`, `AZURE_SQL_DRIVER`
+- Set `PG_HOST`, `PG_USER`, and `PG_PASSWORD` → **SQL** (PostgreSQL)
+- Optional for PostgreSQL: set `PG_PORT` and `PG_DATABASE` (defaults are `5432` and `postgres`)
+- Set `COSMOS_ENDPOINT` (and `COSMOS_KEY`) → **NoSQL** (Azure Cosmos DB for NoSQL). This takes priority over SQL settings if both happen to be set.
 
 `.env` is loaded automatically via `python-dotenv` and is already excluded
 in `.gitignore`, so credentials never get committed.
@@ -126,7 +138,7 @@ test your App Service configuration locally before deploying.
 - `extensions.py` - shared Flask extension instances (SQLAlchemy, Flask-Login)
 - `routes.py` - all routes; talks only to the `data` package, never to a specific database
 - `data/__init__.py` - picks the SQL or NoSQL backend and exposes one common API
-- `data/sql_backend.py` - SQLAlchemy models and functions (SQLite and PostgreSQL)
+- `data/sql_backend.py` - SQLAlchemy models and functions (SQLite, Azure SQL, and PostgreSQL)
 - `data/nosql_backend.py` - Azure Cosmos DB for NoSQL functions (documents)
 - `.env.example` - template for your local `.env` file (copy to `.env`, never commit the real one)
 - `pyproject.toml` / `uv.lock` - dependency definition and locked versions for `uv`
@@ -139,7 +151,7 @@ test your App Service configuration locally before deploying.
 - User registration and login (Flask-Login, hashed passwords)
 - Create, view, update, and delete job entries
 - Track job completion status
-- Same code, three database backends: SQLite, PostgreSQL, Cosmos DB for NoSQL
+- Same code, four database backends: SQLite, Azure SQL Database, PostgreSQL, Cosmos DB for NoSQL
 - Same code, two hosting targets: VM or Azure App Service
 
 ## License
