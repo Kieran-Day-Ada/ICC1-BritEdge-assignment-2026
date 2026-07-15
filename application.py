@@ -5,11 +5,11 @@ from datetime import datetime, timezone
 from dotenv import load_dotenv
 from flask import Flask
 
-from config import Config
-from extensions import login_manager
-
 # Load environment variables from a local .env file, if present.
 load_dotenv()
+
+from config import Config
+from extensions import login_manager
 
 # Initialise Flask application
 app = Flask(__name__)
