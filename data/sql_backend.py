@@ -98,7 +98,13 @@ def rollback():
 
 
 def get_user_by_id(user_id):
-    return User.query.get(int(user_id))
+    # Flask-Login stores user_id in the session cookie as a string. If this
+    # app was previously running against the NoSQL backend, that value can be
+    # a UUID and must not crash SQL lookups.
+    try:
+        return User.query.get(int(user_id))
+    except (TypeError, ValueError):
+        return None
 
 
 def get_user_by_username(username):
