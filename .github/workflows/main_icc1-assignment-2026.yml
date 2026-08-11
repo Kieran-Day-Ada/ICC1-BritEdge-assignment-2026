@@ -60,12 +60,12 @@ jobs:
         with:
           name: python-app
       
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_63A3EC12346A42ECA634999FD3B2654A }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_14E82570F27842648A5B9CD26C736326 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_249AAB930C934A0191BB13B2379F90ED }}
+      # - name: Login to Azure
+      #   uses: azure/login@v2
+      #   with:
+      #     client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_63A3EC12346A42ECA634999FD3B2654A }}
+      #     tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_14E82570F27842648A5B9CD26C736326 }}
+      #     subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_249AAB930C934A0191BB13B2379F90ED }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -73,4 +73,4 @@ jobs:
         with:
           app-name: 'icc1-assignment-2026'
           slot-name: 'Production'
-          
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
