@@ -39,17 +39,17 @@ class Config:
     if all((AZURE_SQL_SERVER, AZURE_SQL_USER, AZURE_SQL_PASSWORD)):
         # ODBC connection string for Azure SQL Database.
         azure_sql_odbc_connect = quote_plus(
-            'Driver={' + AZURE_SQL_DRIVER + '};'
-            'Server=tcp:' + AZURE_SQL_SERVER + ',' + AZURE_SQL_PORT + ';'
-            'Database=' + AZURE_SQL_DATABASE + ';'
-            'Uid=' + AZURE_SQL_USER + ';'
-            'Pwd=' + AZURE_SQL_PASSWORD + ';'
-            'Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+            f"Driver={{{AZURE_SQL_DRIVER}}};"
+            f"Server=tcp:{AZURE_SQL_SERVER},{AZURE_SQL_PORT};"
+            f"Database={AZURE_SQL_DATABASE};"
+            f"Uid={AZURE_SQL_USER};"
+            f"Pwd={AZURE_SQL_PASSWORD};"
+            f"Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
         )
         DATABASE_URL = f'mssql+pyodbc:///?odbc_connect={azure_sql_odbc_connect}'
     elif all((PG_HOST, PG_USER, PG_PASSWORD)):
-        encoded_user = quote_plus(PG_USER)
-        encoded_password = quote_plus(PG_PASSWORD)
+        encoded_user = quote_plus(PG_USER) # pyright: ignore[reportArgumentType, reportCallIssue]
+        encoded_password = quote_plus(PG_PASSWORD) # pyright: ignore[reportArgumentType, reportCallIssue]
         DATABASE_URL = (
             f'postgresql://{encoded_user}:{encoded_password}'
             f'@{PG_HOST}:{PG_PORT}/{PG_DATABASE}'
